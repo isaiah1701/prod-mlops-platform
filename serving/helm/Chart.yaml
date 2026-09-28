@@ -1,0 +1,6 @@
+apiVersion: v2
+name: airbnb-price-predictor
+description: MLflow Registry-backed Airbnb price inference and Argo CD bootstrap.
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

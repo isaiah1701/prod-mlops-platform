@@ -1,0 +1,28 @@
+bootstrap:
+  enabled: false
+
+workload:
+  enabled: true
+
+image:
+  repository: airbnb-price-predictor
+  tag: dev
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+autoscaling:
+  enabled: false
+
+mlflow:
+  trackingUri: http://mlflow.mlflow.svc.cluster.local:5000
+  modelName: airbnb-price-predictor
+  modelAlias: champion
+
+externalSecret:
+  enabled: false

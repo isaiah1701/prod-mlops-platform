@@ -1,0 +1,36 @@
+# Replace the repository and immutable tag during the image-promotion workflow.
+image:
+  repository: "REPLACE_WITH_ECR_REPOSITORY"
+  tag: "sha-REPLACE_WITH_GIT_SHA"
+  pullPolicy: IfNotPresent
+
+replicaCount: 2
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+nodeSelector:
+  workload: serving
+
+tolerations:
+  - key: workload
+    operator: Equal
+    value: serving
+    effect: NoSchedule
+
+externalSecret:
+  enabled: true
+  name: airbnb-inference-runtime
+  refreshInterval: 1h
+  secretStoreName: airbnb-aws-secrets-manager
+  aws:
+    region: eu-west-2
+    secretId: prod-mlops/prod/inference
+  properties:
+    - MLFLOW_TRACKING_USERNAME
+    - MLFLOW_TRACKING_PASSWORD
+
+existingSecret: airbnb-inference-runtime

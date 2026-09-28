@@ -1,0 +1,13 @@
+{{- if and .Values.workload.enabled (not .Values.bootstrap.enabled) }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "airbnb.fullname" . }}
+  labels:
+    {{- include "airbnb.labels" . | nindent 4 }}
+data:
+  MLFLOW_TRACKING_URI: {{ required "mlflow.trackingUri is required" .Values.mlflow.trackingUri | quote }}
+  MODEL_NAME: {{ required "mlflow.modelName is required" .Values.mlflow.modelName | quote }}
+  MODEL_ALIAS: {{ required "mlflow.modelAlias is required" .Values.mlflow.modelAlias | quote }}
+  LOG_LEVEL: {{ .Values.logLevel | quote }}
+{{- end }}

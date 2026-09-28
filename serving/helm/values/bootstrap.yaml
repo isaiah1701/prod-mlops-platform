@@ -1,0 +1,17 @@
+bootstrap:
+  enabled: true
+
+workload:
+  enabled: false
+
+git:
+  repoURL: "https://github.com/isaiah1701/prod-mlops-platform.git"
+  targetRevision: main
+  chartPath: serving/helm
+
+project:
+  name: prod-mlops
+
+destination:
+  server: https://kubernetes.default.svc
+  namespace: airbnb-inference

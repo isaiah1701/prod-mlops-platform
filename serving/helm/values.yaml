@@ -1,0 +1,98 @@
+bootstrap:
+  enabled: false
+
+workload:
+  enabled: true
+
+image:
+  repository: airbnb-price-predictor
+  tag: dev
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: "1"
+    memory: 2Gi
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+mlflow:
+  trackingUri: http://mlflow.mlflow.svc.cluster.local:5000
+  modelName: airbnb-price-predictor
+  modelAlias: champion
+
+logLevel: INFO
+existingSecret: ""
+
+serviceAccount:
+  create: true
+  name: ""
+  automountServiceAccountToken: false
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop: ["ALL"]
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+terminationGracePeriodSeconds: 30
+
+externalSecret:
+  enabled: false
+  name: airbnb-inference-runtime
+  refreshInterval: 1h
+  secretStoreName: airbnb-aws-secrets-manager
+  aws:
+    region: eu-west-2
+    secretId: prod-mlops/prod/inference
+  properties: []
+
+git:
+  repoURL: ""
+  targetRevision: main
+  chartPath: serving/helm
+
+project:
+  name: prod-mlops
+
+destination:
+  server: https://kubernetes.default.svc
+  namespace: airbnb-inference
+
+syncPolicy:
+  automated: true
+  prune: true
+  selfHeal: true
+
+externalSecretsOperator:
+  name: external-secrets
+  namespace: external-secrets
+  chartRepo: https://charts.external-secrets.io
+  chart: external-secrets
+  chartVersion: 0.20.4
+  serviceAccountName: external-secrets

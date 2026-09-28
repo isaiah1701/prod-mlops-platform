@@ -1,0 +1,16 @@
+.git
+.github
+.mypy_cache
+.pytest_cache
+.ruff_cache
+.venv
+**/__pycache__
+data
+docs
+feature_repo
+mlflow.db
+mlruns
+pipelines
+terraform
+tests
+*.pyc
